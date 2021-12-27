@@ -12,8 +12,8 @@ namespace csv {
         class Iterator {
             std::ifstream *input;
             size_t position = 0;
-        public:
             std::tuple<Args...> currentRow;
+        public:
 
             explicit Iterator(std::ifstream *in):
             input(in) {
@@ -22,16 +22,6 @@ namespace csv {
             }
 
             ~Iterator() = default;
-
-            Iterator(const Iterator &it);
-
-            Iterator(Iterator &&it) noexcept;
-
-            Iterator &operator=(const Iterator &it);
-
-            Iterator &operator=(Iterator &&it) noexcept;
-
-            void swap(Iterator &b);
 
             bool operator==(const Iterator &b) const;
 
@@ -64,59 +54,17 @@ namespace csv {
     }
 
     template<class... Args>
-    CSVParser<Args...>::Iterator::Iterator(const CSVParser::Iterator &it) {
-        input->close();
-        input = it.input;
-        position = it.position;
-        currentRow = it.currentRow;
-    }
-
-    template<class... Args>
-    CSVParser<Args...>::Iterator::Iterator(CSVParser::Iterator &&it) noexcept {
-        input->close();
-        input = it.input;
-        position = it.position;
-        currentRow = std::move(it.currentRow);
-    }
-
-    template<class... Args>
-    typename CSVParser<Args...>::Iterator &CSVParser<Args...>::Iterator::operator=(const CSVParser::Iterator &it) {
-        if (&it != this) {
-            input->close();
-            input = it.input;
-            position = it.position;
-            currentRow = it.currentRow;
-        }
-        return *this;
-    }
-
-    template<class... Args>
-    typename CSVParser<Args...>::Iterator &CSVParser<Args...>::Iterator::operator=(CSVParser::Iterator &&it) noexcept {
-        if (&it != this) {
-            input->close();
-            input = it.input;
-            position = it.position;
-            currentRow = std::move(it.currentRow);
-        }
-        return *this;
-    }
-
-
-    template<class... Args>
-    void CSVParser<Args...>::Iterator::swap(typename CSVParser<Args...>::Iterator &b) {
-        std::swap(input, b.input);
-        std::swap(input, b.input);
-        std::swap(position, b.position);
-    }
-
-    template<class... Args>
     bool CSVParser<Args...>::Iterator::operator==(const typename CSVParser<Args...>::Iterator &b) const {
-        return input == b.input;
+        if(input == b.input)
+            return true;
+        return position == b.position;
     }
 
     template<class... Args>
     bool CSVParser<Args...>::Iterator::operator!=(const typename CSVParser<Args...>::Iterator &b) const {
-        return input != b.input;
+        if(input != b.input)
+            return true;
+        return position != b.position;
     }
 
     template<class... Args>
