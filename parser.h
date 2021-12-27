@@ -16,7 +16,10 @@ namespace csv {
             std::tuple<Args...> currentRow;
 
             explicit Iterator(std::ifstream *in):
-            input(in) {}
+            input(in) {
+                if(in != nullptr)
+                    (*in) >> currentRow;
+            }
 
             ~Iterator() = default;
 
@@ -28,8 +31,7 @@ namespace csv {
 
             Iterator &operator=(Iterator &&it) noexcept;
 
-            template<class... Argc>
-            friend void swap(Iterator &a, Iterator &b);
+            void swap(Iterator &b);
 
             bool operator==(const Iterator &b) const;
 
@@ -101,9 +103,10 @@ namespace csv {
 
 
     template<class... Args>
-    void swap(typename CSVParser<Args...>::Iterator &a, typename CSVParser<Args...>::Iterator &b) {
-        std::swap(a.input, b.input);
-        std::swap(a.position, b.position);
+    void CSVParser<Args...>::Iterator::swap(typename CSVParser<Args...>::Iterator &b) {
+        std::swap(input, b.input);
+        std::swap(input, b.input);
+        std::swap(position, b.position);
     }
 
     template<class... Args>
