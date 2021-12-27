@@ -10,7 +10,7 @@ int main() {
 
     std::ifstream in(filename);
     std::ofstream out("output.txt");
-    csv::CSVParser<int, int> parser{in, skip};
+    csv::CSVParser<int, int, std::string> parser{in, skip};
 
     for(auto & iter : parser) {
         out << iter << '\n';
