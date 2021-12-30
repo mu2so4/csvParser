@@ -19,6 +19,7 @@ namespace csv {
             input(in) {
                 if(in != nullptr)
                     (*in) >> currentRow;
+                else position = -1;
             }
 
             ~Iterator() = default;
@@ -30,6 +31,8 @@ namespace csv {
             Iterator &operator++();
 
             std::tuple<Args...> &operator*();
+
+            std::tuple<Args...> *operator->();
         };
 
     private:
@@ -55,8 +58,8 @@ namespace csv {
 
     template<class... Args>
     bool CSVParser<Args...>::Iterator::operator==(const typename CSVParser<Args...>::Iterator &b) const {
-        if(input == b.input)
-            return true;
+        if(input != b.input)
+            return false;
         return position == b.position;
     }
 
@@ -84,6 +87,11 @@ namespace csv {
     template<class... Args>
     std::tuple<Args...> &CSVParser<Args...>::Iterator::operator*() {
         return currentRow;
+    }
+
+    template<class... Args>
+    std::tuple<Args...> *CSVParser<Args...>::Iterator::operator->() {
+        return &currentRow;
     }
 
     template<class... Args>
