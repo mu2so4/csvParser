@@ -26,26 +26,35 @@ std::basic_ofstream<Ch, Tr> &operator<<(std::basic_ofstream<Ch, Tr> &os, const s
     return os;
 }
 
+template<class T>
+std::istringstream &read(std::istringstream &is, T &a);
 
+template<class T>
+std::istringstream &read(std::istringstream &is, T &a) {
+    std::string data;
+    getline(is, data, ',');
+    std::istringstream(data) >> a;
+    if(!is)
+        throw std::exception();
+    return is;
+}
+
+template<>
+std::istringstream &read(std::istringstream &is, std::string &a) {
+    getline(is, a, ',');
+    return is;
+}
 
 
 template<class Tuple, size_t Pos>
 std::istringstream &read_tuple(std::istringstream &is, Tuple &t, int_<Pos>) {
-    std::string data;
-    getline(is, data, ',');
-    std::istringstream(data) >> std::get<std::tuple_size<Tuple>::value - Pos>(t);
-    if(!is)
-        throw std::exception();
+    read(is, std::get<std::tuple_size<Tuple>::value - Pos>(t));
     return read_tuple(is, t, int_<Pos - 1>());
 }
 
 template<class Tuple>
 std::istringstream &read_tuple(std::istringstream &is, Tuple &t, int_<1>) {
-    std::string data;
-    getline(is, data, ',');
-    std::istringstream(data) >> std::get<std::tuple_size<Tuple>::value - 1>(t);
-    if(!is)
-        throw std::exception();
+    read(is, std::get<std::tuple_size<Tuple>::value - 1>(t));
     return is;
 }
 
