@@ -27,10 +27,10 @@ std::basic_ofstream<Ch, Tr> &operator<<(std::basic_ofstream<Ch, Tr> &os, const s
 }
 
 template<class T>
-std::istringstream &read(std::istringstream &is, T &a);
+std::istringstream &read_element(std::istringstream &is, T &a);
 
 template<class T>
-std::istringstream &read(std::istringstream &is, T &a) {
+std::istringstream &read_element(std::istringstream &is, T &a) {
     std::string data;
     getline(is, data, ',');
     std::istringstream(data) >> a;
@@ -40,7 +40,7 @@ std::istringstream &read(std::istringstream &is, T &a) {
 }
 
 template<>
-std::istringstream &read(std::istringstream &is, std::string &a) {
+std::istringstream &read_element(std::istringstream &is, std::string &a) {
     getline(is, a, ',');
     return is;
 }
@@ -48,13 +48,13 @@ std::istringstream &read(std::istringstream &is, std::string &a) {
 
 template<class Tuple, size_t Pos>
 std::istringstream &read_tuple(std::istringstream &is, Tuple &t, int_<Pos>) {
-    read(is, std::get<std::tuple_size<Tuple>::value - Pos>(t));
+    read_element(is, std::get<std::tuple_size<Tuple>::value - Pos>(t));
     return read_tuple(is, t, int_<Pos - 1>());
 }
 
 template<class Tuple>
 std::istringstream &read_tuple(std::istringstream &is, Tuple &t, int_<1>) {
-    read(is, std::get<std::tuple_size<Tuple>::value - 1>(t));
+    read_element(is, std::get<std::tuple_size<Tuple>::value - 1>(t));
     return is;
 }
 
